@@ -19,6 +19,19 @@ class App extends React.Component {
     this.componentDidMount = this.componentDidMount.bind(this);
   }
 
+  getYouTubeVideos(query) {
+    var options = {
+      key: YOUTUBE_API_KEY,
+      query: query
+    };
+    searchYouTube(options, (videos) => {
+      this.setState({
+        currentVideo: videos[0],
+        videoList: videos
+      });
+    });
+  }
+
   clickedVideo(click) {
     this.setState({
       currentVideo: click
@@ -26,27 +39,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    var results;
-    var options = {
-      query: 'cat',
-      max: 5,
-      key: YOUTUBE_API_KEY
-    };
-
-    searchYouTube(options, (data) => {
-      results = data;
-      console.log(results);
-    });
-
-    var stateSetter = () => {
-      console.log(results);
-      this.setState({
-        currentVideo: results[0],
-        videoList: results
-      });
-    };
-
-    setTimeout(stateSetter, 1000);
+    this.getYouTubeVideos('cat');
   }
 
   render() {
@@ -54,7 +47,7 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <div><Search /></div>
+            <div><Search handleSearchInputChange={this.getYouTubeVideos.bind(this)} /></div>
           </div>
         </nav>
         <div className="row">
